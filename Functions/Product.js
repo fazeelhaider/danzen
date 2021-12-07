@@ -246,11 +246,69 @@ function LoginPortal(Body){
     })
 }
 
+function InsertBook(data){
+    return new Promise((res, rej)=>{
+    const{
+    Pdf,
+    CoverImage,
+    Name,
+    __dirname
+    } = data;
+    const PdfURL = UploadSingleFile(Pdf, __dirname);
+    const CoverImageURL = UploadSingleFile(CoverImage, __dirname);
+    if(PdfURL && CoverImageURL){
+        AddCounter('Books').then((result)=>{
+            const {
+              WillLastId
+            } = result;
+            const Body = {
+                PdfURL,
+                CoverImageURL,
+                Name,
+                _id:WillLastId
+            };
+            InsertInDb('Books', Body)
+            .then(result=>{
+                res(result)
+            })
+            .catch(err=>{
+                rej(err)
+            })
+           }).catch((err)=>rej(err))
+    }
+    else{
+        rej({Code:"01", Message:`Error in Uploading file, ${PdfURL}, ${CoverImageURL}` })
+    }
+ 
+    })
+}
+
+
+function UploadSingleFile(File, __dirname){
+    return new Promise((res, rej)=>{
+        AddCounter('Uploads').then((result)=>{
+            const Path = `${__dirname}/Uploads/${WillLastId}-${File.name}`;
+            const {
+              WillLastId
+            } = result;
+            File.mv(Path, function(err) {
+                if (!err){
+                    res(Path);
+                }
+                else{
+                    rej(null)
+                }
+              });
+           }).catch((err)=>rej(err))
+        
+        })
+    }
 module.exports = {
     AddUserDoctor,
     Login,
     InsertSpeciality,
     InsertCity,
     AddUserAdmin,
-    LoginPortal
+    LoginPortal,
+    InsertBook
 }

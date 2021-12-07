@@ -16,9 +16,14 @@ const {
   InsertSpeciality,
   InsertCity,
   AddUserAdmin,
-  LoginPortal
+  LoginPortal,
+  InsertBook
 
  } = require('./Functions/Product');
+
+const fileUpload = require('express-fileupload');
+ 
+app.use(fileUpload());
 const { DeleteInDb, FindInDb, UpdateInDb } = require('./Functions/libs');
 var url = "mongodb://localhost:27017/";
 
@@ -233,6 +238,25 @@ app.delete('/DeleteAdminUser', function(req, res){
 
 
 
+
+app.post('/InsertBook', function(req, res){
+  const {
+    Pdf,
+    CoverImage
+  } = req.files;
+  const {
+    Name
+  } = req.body;
+  if(Pdf && CoverImage && Name){
+    InsertBook({
+      Pdf,
+      CoverImage,
+      Name,
+      __dirname
+    }).then((result)=>res.status(200).send(result))
+    .catch((err)=> res.status(500).send(err))
+  }
+});
 
 
 
