@@ -17,7 +17,8 @@ const {
   InsertCity,
   AddUserAdmin,
   LoginPortal,
-  InsertBook
+  InsertBook,
+  AddHostInBooks
 
  } = require('./Functions/Product');
 
@@ -291,6 +292,44 @@ app.get('/GetAdminUser', function(req, res){
   })
 });
 
+app.get('/GetUserProfile', function(req, res){
+  const {
+    query
+  } = req;
+  if(!Object.keys(query).includes('Id') && !Object.keys(query).includes('UserTypeId')){
+    res.status(500).send({Code:"01", Message:"Missing Id parameter !"})
+  }
+  else{
+    const {
+      Id,
+      UserTypeId
+    } = query;
+    FindInDb('Users', {UserTypeId: parseInt(UserTypeId), _id: parseInt(Id)})
+    .then(result=>{
+      res.status(200).send(result);
+    })
+    .catch(err=>{
+      res.status(500).send(err);
+    })
+  }
+});
+
+app.get('/GetBooks', function(req, res){
+  FindInDb('Books', {})
+  .then(result=>{
+    const {
+      Data
+    } = result;
+    AddHostInBooks(Data, req.get('host'))
+    .then((newArray)=>{
+      result.Data = newArray;
+      res.status(200).send(result);
+    })
+  })
+  .catch(err=>{
+    res.status(500).send(err);
+  })
+});
 
 
 app.listen(process.env.PORT || 3000, function(){

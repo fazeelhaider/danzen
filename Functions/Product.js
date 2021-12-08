@@ -247,15 +247,15 @@ function LoginPortal(Body){
 }
 
 function InsertBook(data){
-    return new Promise((res, rej)=>{
+    return new Promise( async (res, rej)=>{
     const{
     Pdf,
     CoverImage,
     Name,
     __dirname
     } = data;
-    const PdfURL = UploadSingleFile(Pdf, __dirname);
-    const CoverImageURL = UploadSingleFile(CoverImage, __dirname);
+    const PdfURL =  await UploadSingleFile(Pdf, __dirname);
+    const CoverImageURL = await UploadSingleFile(CoverImage, __dirname);
     if(PdfURL && CoverImageURL){
         AddCounter('Books').then((result)=>{
             const {
@@ -287,10 +287,10 @@ function InsertBook(data){
 function UploadSingleFile(File, __dirname){
     return new Promise((res, rej)=>{
         AddCounter('Uploads').then((result)=>{
-            const Path = `${__dirname}/Uploads/${WillLastId}-${File.name}`;
             const {
-              WillLastId
-            } = result;
+                WillLastId
+              } = result;
+            const Path = `Uploads/${WillLastId}-${File.name}`;
             File.mv(Path, function(err) {
                 if (!err){
                     res(Path);
@@ -302,7 +302,20 @@ function UploadSingleFile(File, __dirname){
            }).catch((err)=>rej(err))
         
         })
-    }
+}
+function AddHostInBooks(arr, host){
+    const NewArray = [];
+    return new Promise((resolve,reject)=>{
+        arr.map((Val, index)=>{
+            Val.CoverImageURL = `${host}${Val.CoverImageURL}`;
+            Val.PdfURL = `${host}${Val.PdfURL}`;
+            NewArray.push(Val)
+            if(arr.length == index+1){
+                resolve(NewArray)
+            }
+        })
+    })
+}
 module.exports = {
     AddUserDoctor,
     Login,
@@ -310,5 +323,6 @@ module.exports = {
     InsertCity,
     AddUserAdmin,
     LoginPortal,
-    InsertBook
+    InsertBook,
+    AddHostInBooks
 }
