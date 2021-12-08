@@ -290,10 +290,10 @@ function UploadSingleFile(File, __dirname){
             const {
                 WillLastId
               } = result;
-            const Path = `Uploads/${WillLastId}-${File.name}`;
+            const Path = `${__dirname}/Uploads/${WillLastId}-${File.name}`;
             File.mv(Path, function(err) {
                 if (!err){
-                    res(Path);
+                    res(`Uploads/${WillLastId}-${File.name}`);
                 }
                 else{
                     rej(null)
@@ -307,8 +307,8 @@ function AddHostInBooks(arr, host){
     const NewArray = [];
     return new Promise((resolve,reject)=>{
         arr.map((Val, index)=>{
-            Val.CoverImageURL = `${host}${Val.CoverImageURL}`;
-            Val.PdfURL = `${host}${Val.PdfURL}`;
+            Val.CoverImageURL = `https://${host}/${Val.CoverImageURL}`;
+            Val.PdfURL = `https://${host}/${Val.PdfURL}`;
             NewArray.push(Val)
             if(arr.length == index+1){
                 resolve(NewArray)
