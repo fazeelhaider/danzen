@@ -1,5 +1,5 @@
 var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb://localhost:27017/";
+const {DBURL} = require('./connection')
 
 function CheckMandatory(Body, MandatoryFields){
     const BodyKeys = Object.keys(Body);
@@ -64,7 +64,7 @@ function InsertInDb(Table, Body){
     Body.UpdatedAt = null;
 
     return new Promise((res, rej)=>{
-    MongoClient.connect(url, function(err, db) {
+    MongoClient.connect(DBURL, function(err, db) {
         if (err){
             rej({Error:err, Code: "01"});
         }
@@ -94,7 +94,7 @@ function UpdateInDb(Table, Body){
     Id = JSON.parse(Id)
     delete Body.Id;
     return new Promise((res, rej)=>{
-    MongoClient.connect(url, function(err, db) {
+    MongoClient.connect(DBURL, function(err, db) {
         if (err){
             rej({Error:err, Code: "01"});
         }
@@ -120,7 +120,7 @@ function DeleteInDb(Table, Body){
     } = Body;
     Id = JSON.parse(Id);
     return new Promise((res, rej)=>{
-    MongoClient.connect(url, function(err, db) {
+    MongoClient.connect(DBURL, function(err, db) {
         if (err){
             rej({Error:err, Code: "01"});
         }
@@ -142,7 +142,7 @@ function DeleteInDb(Table, Body){
 
 function FindInDb(Table, Query){
     return new Promise((res, rej)=>{
-    MongoClient.connect(url, function(err, db) {
+    MongoClient.connect(DBURL, function(err, db) {
         if (err){
             rej({Error:err, Code: "01"});
         }

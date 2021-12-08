@@ -1,11 +1,10 @@
 
 
 var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb://localhost:27017/";
-
+const {DBURL} = require('./connection')
 function AddCounter(Name){
     return new Promise((res, rej)=>{
-        MongoClient.connect(url, function(err, db) {
+        MongoClient.connect(DBURL, function(err, db) {
             if (err){
                 rej({Error:err, Code: "01"});
             }

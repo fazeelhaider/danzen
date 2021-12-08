@@ -25,7 +25,6 @@ const fileUpload = require('express-fileupload');
  
 app.use(fileUpload());
 const { DeleteInDb, FindInDb, UpdateInDb } = require('./Functions/libs');
-var url = "mongodb://localhost:27017/";
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:false}));
