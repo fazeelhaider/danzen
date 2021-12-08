@@ -290,7 +290,7 @@ function UploadSingleFile(File, __dirname){
             const {
                 WillLastId
               } = result;
-            const Path = `../Uploads/${WillLastId}-${File.name}`;
+            const Path = `${__dirname}/Uploads/${WillLastId}-${File.name}`;
             File.mv(Path, function(err) {
                 if (!err){
                     res(`Uploads/${WillLastId}-${File.name}`);
