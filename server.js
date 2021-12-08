@@ -330,7 +330,7 @@ app.get('/GetBooks', function(req, res){
     res.status(500).send(err);
   })
 });
-
+app.use('/Uploads', express.static('uploads'));
 
 app.listen(process.env.PORT || 3000, function(){
   console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
